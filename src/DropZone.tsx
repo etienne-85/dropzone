@@ -8,6 +8,8 @@ interface Bookmark {
 
 export const DropZone = () => {
   const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
+  const [isInstalled, setIsInstalled] = useState(false);
+  const [showConfig, setShowConfig] = useState(false);
 
   const loadBookmarks = () => {
     const stored = localStorage.getItem('bookmarks');
@@ -22,6 +24,9 @@ export const DropZone = () => {
   };
 
   useEffect(() => {
+    const installed = localStorage.getItem('dropzone-installed') === 'true';
+    setIsInstalled(installed);
+
     window.name = 'dropzone-sink';
     loadBookmarks();
 
@@ -35,6 +40,11 @@ export const DropZone = () => {
           currentBookmarks.push(data);
           saveBookmarks(currentBookmarks);
           console.log('Saved bookmark:', data);
+
+          if (!isInstalled) {
+            localStorage.setItem('dropzone-installed', 'true');
+            setIsInstalled(true);
+          }
         }
       }
     };
@@ -114,26 +124,132 @@ export const DropZone = () => {
     if (bookmarkletRef.current) {
       bookmarkletRef.current.href = bookmarkletCode;
     }
-  }, []);
+  }, [isInstalled]);
+
+  const handleClearData = () => {
+    if (window.confirm('Are you sure you want to clear all data? This action cannot be undone.')) {
+      localStorage.removeItem('bookmarks');
+      localStorage.removeItem('dropzone-installed');
+      setBookmarks([]);
+      setIsInstalled(false);
+      setShowConfig(false);
+    }
+  };
 
   return (
     <div className="font-sans max-w-3xl mx-auto mt-8 px-4 text-gray-800">
-      <h1 className="text-blue-600 text-3xl font-bold mb-6">DropZone</h1>
-
-      <div className="bg-gray-50 p-4 rounded-md border border-gray-300 mb-8 leading-relaxed">
-        <p className="font-bold mb-2">How to install the dropzone bookmarklet:</p>
-        <ol className="list-decimal list-inside space-y-1">
-          <li>
-            Keep this <code className="bg-gray-200 px-1 rounded">dropzone.html</code> page open in a browser tab.
-          </li>
-          <li>
-            Drag the button below <strong>to your bookmarks bar</strong> to create the bookmarklet.
-          </li>
-          <li>
-            When browsing any page, click the bookmarklet to save the current page info here.
-          </li>
-        </ol>
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-blue-600 text-3xl font-bold">DropZone</h1>
+        <div className="flex items-center space-x-2">
+          <label
+            htmlFor="importFile"
+            className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center cursor-pointer"
+            title="Import bookmarks from JSON"
+          >
+            <svg
+              className="w-4 h-4 mr-2"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fillRule="evenodd"
+                d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 6.707a1 1 0 011.414 0L10 9.586l2.293-2.879a1 1 0 111.414 1.414l-3 3.75a1 1 0 01-1.414 0l-3-3.75a1 1 0 010-1.414z"
+                clipRule="evenodd"
+              />
+              <path
+                fillRule="evenodd"
+                d="M10 3a1 1 0 011 1v8a1 1 0 11-2 0V4a1 1 0 011-1z"
+                clipRule="evenodd"
+              />
+            </svg>
+            Import
+          </label>
+          <input
+            type="file"
+            id="importFile"
+            accept=".json"
+            onChange={handleImport}
+            className="hidden"
+          />
+          <button
+            onClick={handleExport}
+            className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center"
+            title="Export bookmarks to JSON"
+          >
+            <svg
+              className="w-4 h-4 mr-2"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fillRule="evenodd"
+                d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 13.293a1 1 0 011.414 0L10 16.172l2.293-2.879a1 1 0 111.414 1.414l-3 3.75a1 1 0 01-1.414 0l-3-3.75a1 1 0 010-1.414z"
+                clipRule="evenodd"
+              />
+              <path
+                fillRule="evenodd"
+                d="M10 3a1 1 0 011 1v8a1 1 0 11-2 0V4a1 1 0 011-1z"
+                clipRule="evenodd"
+              />
+            </svg>
+            Export
+          </button>
+          <div className="relative">
+            <button
+              onClick={() => setShowConfig(!showConfig)}
+              className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center"
+              title="Settings"
+            >
+              <svg
+                className="w-4 h-4"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0l-.1.41a1.5 1.5 0 01-2.1 1.44l-.4-.16c-1.52-.6-3.24.73-2.63 2.24l.24.6a1.5 1.5 0 01-1.44 2.1l-.4.1c-1.56.38-1.56 2.6 0 2.98l.4.1a1.5 1.5 0 011.44 2.1l-.24.6c-.6 1.52.73 3.24 2.24 2.63l.4-.16a1.5 1.5 0 012.1 1.44l.1.41c.38 1.56 2.6 1.56 2.98 0l.1-.41a1.5 1.5 0 012.1-1.44l.4.16c1.52.6 3.24-.73 2.63-2.24l-.24-.6a1.5 1.5 0 011.44-2.1l.4-.1c-1.56-.38-1.56-2.6 0-2.98l-.4-.1a1.5 1.5 0 01-1.44-2.1l.24-.6c.6-1.52-.73-3.24-2.24-2.63l-.4.16a1.5 1.5 0 01-2.1-1.44l-.1-.41zM10 13a3 3 0 100-6 3 3 0 000 6z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </button>
+            {showConfig && (
+              <div className="absolute right-0 mt-2 w-48 bg-white rounded-md overflow-hidden shadow-xl z-10">
+                <button
+                  onClick={handleClearData}
+                  className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                >
+                  Clear All Data
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
       </div>
+
+      {!isInstalled ? (
+        <div className="bg-gray-50 p-4 rounded-md border border-gray-300 mb-8 leading-relaxed">
+          <p className="font-bold mb-2">How to install the dropzone bookmarklet:</p>
+          <ol className="list-decimal list-inside space-y-1">
+            <li>
+              Keep this <code className="bg-gray-200 px-1 rounded">dropzone.html</code> page open in a browser tab.
+            </li>
+            <li>
+              Drag the button below <strong>to your bookmarks bar</strong> to create the bookmarklet.
+            </li>
+            <li>
+              Press the bookmarklet to complete installation.
+            </li>
+          </ol>
+        </div>
+      ) : (
+        <div className="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6" role="alert">
+          <p className="font-bold">Installation successful!</p>
+          <p>You can now use the bookmarklet to save pages to your dropzone.</p>
+        </div>
+      )}
 
       <a
         ref={bookmarkletRef}
@@ -167,23 +283,6 @@ export const DropZone = () => {
         )}
       </ul>
 
-      <button
-        onClick={handleExport}
-        className="bg-blue-600 text-white border-none px-4 py-2 rounded cursor-pointer mr-4 font-semibold hover:bg-blue-800"
-        title="Export bookmarks to JSON"
-      >
-        Export Bookmarks
-      </button>
-      <label htmlFor="importFile" className="inline-block">
-        Import bookmarks from JSON:
-      </label>
-      <input
-        type="file"
-        id="importFile"
-        accept=".json"
-        onChange={handleImport}
-        className="mt-4 mb-4 block"
-      />
     </div>
   );
 };

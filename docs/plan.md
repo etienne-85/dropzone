@@ -1,15 +1,26 @@
 # Tasks
+**layout**
+- [x] move import, export buttons at top right of page with relevant icons
+- [x] add gear icon next to import/export
+**first time run: installation**
+- [x] show installation instruction only if no previous installation was found in local storage:
+- [x] replace step3 by: "press bookmarklet to complete installation"
+- [x] when bookmarklet is pressed the first time, populate local storage and mark install as done (which will prevent showing installation isntructions next time)
+- [x] replace installation instruction by successful installation message
+**configuration**
+- [x] when clicking gear icon at top right, show config menu
+- [x] allow clearing all data to come back to prior install state
+**items**
 - [ ] allow items to be deleted
 
 # Main features
-- duplicate detection:
+- [ ] duplicate detection:
  this was already saved previously: what you'd like to do?
     `cancel`, `replace`, `update`, `keep all`
-- 
-- sorting mode: manual (User), auto (AI)
-- categories: `unsorted`, `auto`, `manual`
-- export unsorted along with categories =>
-- user can add a new custom category and ask AI to re-sort items to fit into that new category
+- [ ] sorting mode: manual (User), auto (AI)
+- [ ] categories: `unsorted`, `auto`, `manual`
+- [ ] export unsorted along with categories =>
+- [ ] user can add a new custom category and ask AI to re-sort items to fit into that new category
 
 # Data sorting
 
