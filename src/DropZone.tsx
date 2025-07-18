@@ -11,6 +11,7 @@ export const DropZone = () => {
   const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
   const [isInstalled, setIsInstalled] = useState(false);
   const [showConfig, setShowConfig] = useState(false);
+  const [showSaveConfirmation, setShowSaveConfirmation] = useState(true);
 
   const loadBookmarks = () => {
     const stored = localStorage.getItem('bookmarks');
@@ -28,6 +29,9 @@ export const DropZone = () => {
     const installed = localStorage.getItem('dropzone-installed') === 'true';
     setIsInstalled(installed);
 
+    const confirmation = localStorage.getItem('dropzone-show-save-confirmation');
+    setShowSaveConfirmation(confirmation ? JSON.parse(confirmation) : true);
+
     window.name = 'dropzone-sink';
     loadBookmarks();
 
@@ -43,7 +47,9 @@ export const DropZone = () => {
           console.log('Saved bookmark:', data);
 
           if (event.source) {
-            event.source.postMessage({ status: 'success' }, event.origin as any);
+            const confirmation = localStorage.getItem('dropzone-show-save-confirmation');
+            const showConfirmation = confirmation ? JSON.parse(confirmation) : true;
+            event.source.postMessage({ status: 'success', showConfirmation }, event.origin as any);
           }
           
           if (!isInstalled) {
@@ -125,7 +131,9 @@ export const DropZone = () => {
 
     const messageListener = (event) => {
         if (event.source === receiver && event.data.status === 'success') {
-            alert('Bookmark saved to Dropzone!');
+            if (event.data.showConfirmation) {
+                alert('Bookmark saved to Dropzone!');
+            }
             window.removeEventListener('message', messageListener);
         }
     };
@@ -196,6 +204,18 @@ export const DropZone = () => {
               >
                 Clear All Data
               </button>
+              <label className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                <input
+                  type="checkbox"
+                  checked={showSaveConfirmation}
+                  onChange={(e) => {
+                    setShowSaveConfirmation(e.target.checked);
+                    localStorage.setItem('dropzone-show-save-confirmation', JSON.stringify(e.target.checked));
+                  }}
+                  className="mr-2"
+                />
+                Show save confirmation
+              </label>
             </div>
           )}
         </div>
