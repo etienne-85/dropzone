@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { UploadCloud, Download, Settings, Trash2 } from 'lucide-react';
 
 interface Bookmark {
   title: string;
@@ -153,23 +154,7 @@ export const DropZone = () => {
             className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center cursor-pointer"
             title="Import bookmarks from JSON"
           >
-            <svg
-              className="w-4 h-4 mr-2"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-            >
-              <path
-                fillRule="evenodd"
-                d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 6.707a1 1 0 011.414 0L10 9.586l2.293-2.879a1 1 0 111.414 1.414l-3 3.75a1 1 0 01-1.414 0l-3-3.75a1 1 0 010-1.414z"
-                clipRule="evenodd"
-              />
-              <path
-                fillRule="evenodd"
-                d="M10 3a1 1 0 011 1v8a1 1 0 11-2 0V4a1 1 0 011-1z"
-                clipRule="evenodd"
-              />
-            </svg>
+            <UploadCloud className="w-4 h-4 mr-2" />
             Import
           </label>
           <input
@@ -184,23 +169,7 @@ export const DropZone = () => {
             className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center"
             title="Export bookmarks to JSON"
           >
-            <svg
-              className="w-4 h-4 mr-2"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-            >
-              <path
-                fillRule="evenodd"
-                d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 13.293a1 1 0 011.414 0L10 16.172l2.293-2.879a1 1 0 111.414 1.414l-3 3.75a1 1 0 01-1.414 0l-3-3.75a1 1 0 010-1.414z"
-                clipRule="evenodd"
-              />
-              <path
-                fillRule="evenodd"
-                d="M10 3a1 1 0 011 1v8a1 1 0 11-2 0V4a1 1 0 011-1z"
-                clipRule="evenodd"
-              />
-            </svg>
+            <Download className="w-4 h-4 mr-2" />
             Export
           </button>
           <div className="relative">
@@ -209,18 +178,7 @@ export const DropZone = () => {
               className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center"
               title="Settings"
             >
-              <svg
-                className="w-4 h-4"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0l-.1.41a1.5 1.5 0 01-2.1 1.44l-.4-.16c-1.52-.6-3.24.73-2.63 2.24l.24.6a1.5 1.5 0 01-1.44 2.1l-.4.1c-1.56.38-1.56 2.6 0 2.98l.4.1a1.5 1.5 0 011.44 2.1l-.24.6c-.6 1.52.73 3.24 2.24 2.63l.4-.16a1.5 1.5 0 012.1 1.44l.1.41c.38 1.56 2.6 1.56 2.98 0l.1-.41a1.5 1.5 0 012.1-1.44l.4.16c1.52.6 3.24-.73 2.63-2.24l-.24-.6a1.5 1.5 0 011.44-2.1l.4-.1c-1.56-.38-1.56-2.6 0-2.98l-.4-.1a1.5 1.5 0 01-1.44-2.1l.24-.6c.6-1.52-.73-3.24-2.24-2.63l-.4.16a1.5 1.5 0 01-2.1-1.44l-.1-.41zM10 13a3 3 0 100-6 3 3 0 000 6z"
-                  clipRule="evenodd"
-                />
-              </svg>
+              <Settings className="w-4 h-4" />
             </button>
             {showConfig && (
               <div className="absolute right-0 mt-2 w-48 bg-white rounded-md overflow-hidden shadow-xl z-10">
@@ -289,10 +247,10 @@ export const DropZone = () => {
               </div>
               <button
                 onClick={() => handleDelete(index)}
-                className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded text-xs"
+                className="bg-red-500 hover:bg-red-700 text-white font-bold p-2 rounded-full"
                 title="Delete bookmark"
               >
-                Delete
+                <Trash2 className="w-4 h-4" />
               </button>
             </li>
           ))
