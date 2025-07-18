@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 interface Bookmark {
   title: string;
@@ -90,7 +90,10 @@ export const DropZone = () => {
     event.target.value = '';
   };
 
-  const bookmarkletCode = `javascript:(() => {
+  const bookmarkletRef = useRef<HTMLAnchorElement>(null);
+
+  useEffect(() => {
+    const bookmarkletCode = `javascript:(() => {
     const data = {
       title: document.title,
       url: location.href,
@@ -108,6 +111,10 @@ export const DropZone = () => {
       alert('Bookmark sent to dropzone!');
     }, 800);
   })();`;
+    if (bookmarkletRef.current) {
+      bookmarkletRef.current.href = bookmarkletCode;
+    }
+  }, []);
 
   return (
     <div className="font-sans max-w-3xl mx-auto mt-8 px-4 text-gray-800">
@@ -129,7 +136,7 @@ export const DropZone = () => {
       </div>
 
       <a
-        href={bookmarkletCode}
+        ref={bookmarkletRef}
         draggable={true}
         className="select-none px-3 py-2 bg-blue-100 border border-blue-300 inline-block cursor-pointer no-underline text-blue-600 font-bold rounded mb-4 hover:bg-blue-200"
         title="Drag this link to your bookmarks bar"
