@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { UploadCloud, Download, Settings, Trash2 } from 'lucide-react';
+import { Settings, Trash2 } from 'lucide-react';
 
 interface Bookmark {
   title: string;
