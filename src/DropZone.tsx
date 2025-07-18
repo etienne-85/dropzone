@@ -42,10 +42,15 @@ export const DropZone = () => {
           saveBookmarks(currentBookmarks);
           console.log('Saved bookmark:', data);
 
+          if (event.source) {
+            event.source.postMessage({ status: 'success' }, event.origin as any);
+          }
+          
           if (!isInstalled) {
             localStorage.setItem('dropzone-installed', 'true');
             setIsInstalled(true);
           }
+          setTimeout(() => window.close(), 300);
         }
       }
     };
@@ -107,22 +112,30 @@ export const DropZone = () => {
     const dropzoneUrl = window.location.href;
     const bookmarkletCode = `javascript:(() => {
     const data = {
-      title: document.title,
-      url: location.href,
-      savedAt: new Date().toISOString()
+        title: document.title,
+        url: location.href,
+        savedAt: new Date().toISOString()
     };
 
     const receiver = window.open('${dropzoneUrl}', 'dropzone-sink');
     if (!receiver) {
-      alert('Could not open dropzone. Is popup blocked?');
-      return;
+        alert('Could not open dropzone. Is popup blocked?');
+        return;
     }
 
+    const messageListener = (event) => {
+        if (event.source === receiver && event.data.status === 'success') {
+            alert('Bookmark saved to Dropzone!');
+            window.removeEventListener('message', messageListener);
+        }
+    };
+
+    window.addEventListener('message', messageListener);
+
     setTimeout(() => {
-      receiver.postMessage(data, '*');
-      alert('Bookmark sent to dropzone!');
+        receiver.postMessage(data, '*');
     }, 800);
-  })();`;
+})();`;
     if (bookmarkletRef.current) {
       bookmarkletRef.current.href = bookmarkletCode;
     }
