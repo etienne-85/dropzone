@@ -148,82 +148,75 @@ export const DropZone = () => {
     <div className="font-sans max-w-3xl mx-auto mt-8 px-4 text-gray-800">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-blue-600 text-3xl font-bold">DropZone</h1>
-        <div className="flex items-center space-x-2">
-          <label
-            htmlFor="importFile"
-            className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center cursor-pointer"
-            title="Import bookmarks from JSON"
-          >
-            <UploadCloud className="w-4 h-4 mr-2" />
-            Import
-          </label>
-          <input
-            type="file"
-            id="importFile"
-            accept=".json"
-            onChange={handleImport}
-            className="hidden"
-          />
+        <div className="relative">
           <button
-            onClick={handleExport}
+            onClick={() => setShowConfig(!showConfig)}
             className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center"
-            title="Export bookmarks to JSON"
+            title="Settings"
           >
-            <Download className="w-4 h-4 mr-2" />
-            Export
+            <Settings className="w-4 h-4" />
           </button>
-          <div className="relative">
-            <button
-              onClick={() => setShowConfig(!showConfig)}
-              className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center"
-              title="Settings"
-            >
-              <Settings className="w-4 h-4" />
-            </button>
-            {showConfig && (
-              <div className="absolute right-0 mt-2 w-48 bg-white rounded-md overflow-hidden shadow-xl z-10">
-                <button
-                  onClick={handleClearData}
-                  className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                >
-                  Clear All Data
-                </button>
-              </div>
-            )}
-          </div>
+          {showConfig && (
+            <div className="absolute right-0 mt-2 w-48 bg-white rounded-md overflow-hidden shadow-xl z-10">
+              <label
+                htmlFor="importFile"
+                className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
+              >
+                Import Bookmarks
+              </label>
+              <input
+                type="file"
+                id="importFile"
+                accept=".json"
+                onChange={handleImport}
+                className="hidden"
+              />
+              <button
+                onClick={handleExport}
+                className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+              >
+                Export Bookmarks
+              </button>
+              <button
+                onClick={handleClearData}
+                className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+              >
+                Clear All Data
+              </button>
+            </div>
+          )}
         </div>
       </div>
 
       {!isInstalled ? (
-        <div className="bg-gray-50 p-4 rounded-md border border-gray-300 mb-8 leading-relaxed">
-          <p className="font-bold mb-2">How to install the dropzone bookmarklet:</p>
-          <ol className="list-decimal list-inside space-y-1">
-            <li>
-              Keep this <code className="bg-gray-200 px-1 rounded">dropzone.html</code> page open in a browser tab.
-            </li>
-            <li>
-              Drag the button below <strong>to your bookmarks bar</strong> to create the bookmarklet.
-            </li>
-            <li>
-              Press the bookmarklet to complete installation.
-            </li>
-          </ol>
-        </div>
+        <>
+          <div className="bg-gray-50 p-4 rounded-md border border-gray-300 mb-8 leading-relaxed">
+            <p className="font-bold mb-2">How to install the dropzone bookmarklet:</p>
+            <ol className="list-decimal list-inside space-y-1">
+              <li>
+                Drag the button below <strong>to your bookmarks bar</strong>.
+              </li>
+              <li>
+                Start bookmarking your first site using the bookmarklet button to complete install.
+              </li>
+            </ol>
+          </div>
+          <a
+            ref={bookmarkletRef}
+            draggable={true}
+            className="select-none px-3 py-2 bg-blue-100 border border-blue-300 inline-block cursor-pointer no-underline text-blue-600 font-bold rounded mb-4 hover:bg-blue-200"
+            title="Drag this link to your bookmarks bar"
+          >
+            Save to dropzone
+          </a>
+        </>
       ) : (
-        <div className="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6" role="alert">
-          <p className="font-bold">Installation successful!</p>
-          <p>You can now use the bookmarklet to save pages to your dropzone.</p>
+        <div className="bg-gray-50 p-4 rounded-md border border-gray-300 mb-8 leading-relaxed">
+          <p className="text-center text-gray-600">
+            Use the bookmarklet button from any page to save it here.
+          </p>
         </div>
       )}
-
-      <a
-        ref={bookmarkletRef}
-        draggable={true}
-        className="select-none px-3 py-2 bg-blue-100 border border-blue-300 inline-block cursor-pointer no-underline text-blue-600 font-bold rounded mb-4 hover:bg-blue-200"
-        title="Drag this link to your bookmarks bar"
-      >
-        Save to dropzone
-      </a>
 
       <h2 className="text-blue-600 text-2xl font-bold mb-4">Saved bookmarks</h2>
       <ul className="list-none p-0">
@@ -247,10 +240,10 @@ export const DropZone = () => {
               </div>
               <button
                 onClick={() => handleDelete(index)}
-                className="bg-red-500 hover:bg-red-700 text-white font-bold p-2 rounded-full"
+                className="text-gray-400 hover:text-gray-600"
                 title="Delete bookmark"
               >
-                <Trash2 className="w-4 h-4" />
+                <Trash2 className="w-5 h-5" />
               </button>
             </li>
           ))
