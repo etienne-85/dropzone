@@ -103,6 +103,7 @@ export const DropZone = () => {
   const bookmarkletRef = useRef<HTMLAnchorElement>(null);
 
   useEffect(() => {
+    const dropzoneUrl = window.location.href;
     const bookmarkletCode = `javascript:(() => {
     const data = {
       title: document.title,
@@ -110,7 +111,7 @@ export const DropZone = () => {
       savedAt: new Date().toISOString()
     };
 
-    const receiver = window.open('https://etienne-85.github.io/dropzone/', 'dropzone-sink');
+    const receiver = window.open('${dropzoneUrl}', 'dropzone-sink');
     if (!receiver) {
       alert('Could not open dropzone. Is popup blocked?');
       return;
@@ -125,6 +126,12 @@ export const DropZone = () => {
       bookmarkletRef.current.href = bookmarkletCode;
     }
   }, [isInstalled]);
+
+  const handleDelete = (index: number) => {
+    const newBookmarks = [...bookmarks];
+    newBookmarks.splice(index, 1);
+    saveBookmarks(newBookmarks);
+  };
 
   const handleClearData = () => {
     if (window.confirm('Are you sure you want to clear all data? This action cannot be undone.')) {
@@ -266,18 +273,27 @@ export const DropZone = () => {
           <li>No bookmarks saved yet.</li>
         ) : (
           bookmarks.map((bookmark, index) => (
-            <li key={index} className="mb-3 border-b border-gray-200 pb-2">
-              <a
-                href={bookmark.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="no-underline text-blue-600 font-semibold"
+            <li key={index} className="flex justify-between items-center mb-3 border-b border-gray-200 pb-2">
+              <div>
+                <a
+                  href={bookmark.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="no-underline text-blue-600 font-semibold"
+                >
+                  {bookmark.title}
+                </a>
+                <small className="text-gray-600 ml-2 font-normal">
+                  (saved at {new Date(bookmark.savedAt).toLocaleString()})
+                </small>
+              </div>
+              <button
+                onClick={() => handleDelete(index)}
+                className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded text-xs"
+                title="Delete bookmark"
               >
-                {bookmark.title}
-              </a>
-              <small className="text-gray-600 ml-2 font-normal">
-                (saved at {new Date(bookmark.savedAt).toLocaleString()})
-              </small>
+                Delete
+              </button>
             </li>
           ))
         )}

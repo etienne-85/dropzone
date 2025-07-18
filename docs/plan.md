@@ -11,7 +11,7 @@
 - [x] when clicking gear icon at top right, show config menu
 - [x] allow clearing all data to come back to prior install state
 **items**
-- [ ] allow items to be deleted
+- [x] allow items to be deleted
 
 # Main features
 - [ ] duplicate detection:
